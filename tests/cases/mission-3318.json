@@ -1,5 +1,5 @@
 {
- "scenario": "las-palmas-via-madrid",
+ "scenario": "mission-3318",
  "note": "O1 140 + O2 300 (overnight): one long segment qualifies the whole outward journey, O1 included. Overnight long flight and the briefing 150 min after arrival, so business. R1 285: economy. Span 4365 + 240 = 4605: 10100 x 4605 / 1440 = 32298.96 -> 32299, minus lunch and dinner 2 x 2525 = 27249. Hotel 2 x 14900.",
  "expected": {
   "rate_country": "ES",

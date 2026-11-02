@@ -20,14 +20,14 @@ class Task(Enum):
 class EcScenario(Enum):
     """One mission per member; its facts are bundled with the plugin."""
 
-    LAS_PALMAS_INSPECTION_299 = "las-palmas-inspection-299"
-    LAS_PALMAS_INSPECTION_300 = "las-palmas-inspection-300"
-    LAS_PALMAS_VIA_MADRID = "las-palmas-via-madrid"
-    TENERIFE_RED_EYE_RETURN = "tenerife-red-eye-return"
-    LILLE_RAIL_360 = "lille-rail-360"
-    LILLE_RAIL_361 = "lille-rail-361"
-    LUXEMBOURG_HOTEL_CEILING = "luxembourg-hotel-ceiling"
-    LONDON_LEVY_DEROGATION = "london-levy-derogation"
+    MISSION_4127 = "mission-4127"
+    MISSION_5203 = "mission-5203"
+    MISSION_3318 = "mission-3318"
+    MISSION_6044 = "mission-6044"
+    MISSION_2290 = "mission-2290"
+    MISSION_7712 = "mission-7712"
+    MISSION_8835 = "mission-8835"
+    MISSION_9150 = "mission-9150"
 
 
 class Country(Enum):
@@ -111,7 +111,7 @@ class Meal(Enum):
 
 @dataclass
 class ScenarioInput(Output):
-    scenario: Annotated[EcScenario, "Which mission to work, e.g. las-palmas-via-madrid"]
+    scenario: Annotated[EcScenario, "Which mission to work, e.g. mission-3318"]
 
 
 @dataclass
@@ -130,7 +130,9 @@ class Segment(Output):
     depart_utc: Annotated[str, "Departure, UTC, YYYY-MM-DDTHH:MMZ"]
     arrive_utc: Annotated[str, "Arrival, UTC, YYYY-MM-DDTHH:MMZ"]
     in_air_minutes: Annotated[int | None, "This one flight's continuous flying minutes, takeoff to landing; null for a train"]
-    overnight: Annotated[bool, "True when this flight or train is an overnight service"]
+    overnight: Annotated[
+        bool, "True when this flight or train is under way at any minute from 00:00 to 04:59 UTC (toy rule C2); given, never recomputed"
+    ]
 
 
 @dataclass

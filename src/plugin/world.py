@@ -15,6 +15,7 @@ UTC_STAMP = re.compile(r"(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})Z")
 CODE = re.compile(r"[A-Z]{3}")
 MONTH_DAYS = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 EPOCH = "2027-01-01"  # minute stamps count whole minutes from 2027-01-01T00:00Z
+NIGHT_END_MINUTE = 300  # C2: a segment is overnight when it is under way at some minute from 00:00 to 04:59 UTC
 
 COUNTRY_KEYS = ("country", "country_name", "daily_allowance_cents", "hotel_ceiling_cents", "source")
 SCENARIO_KEYS = (
@@ -60,6 +61,14 @@ def utc_minute(stamp):
     if hours > 23 or minutes > 59:
         raise ValueError(f"{stamp!r} is not a time of day")
     return (day_number(date) - day_number(EPOCH)) * 1440 + hours * 60 + minutes
+
+
+def is_overnight(depart_utc, arrive_utc):
+    """C2's definition of a segment's overnight flag: it is under way at some minute from 00:00 to 04:59 UTC,
+    that is, some minute m with depart <= m < arrive has m mod 1440 < NIGHT_END_MINUTE."""
+    depart, arrive = utc_minute(depart_utc), utc_minute(arrive_utc)
+    first_midnight = -(-depart // 1440) * 1440  # the first 00:00Z at or after departure
+    return depart % 1440 < NIGHT_END_MINUTE or first_midnight < arrive
 
 
 def load_world(data):
@@ -139,6 +148,8 @@ def schema_problems(world, scenario):
                 problems.append(f"rail segment {segment['segment_id']} has in_air_minutes")
             if not (CODE.fullmatch(segment["origin"]) and CODE.fullmatch(segment["destination"])):
                 problems.append(f"segment {segment['segment_id']}: bad codes")
+            if segment["overnight"] != is_overnight(segment["depart_utc"], segment["arrive_utc"]):
+                problems.append(f"segment {segment['segment_id']}: overnight flag is not the C2 night window")
         for earlier, later in zip(journey["segments"], journey["segments"][1:]):
             if earlier["destination"] != later["origin"] or utc_minute(later["depart_utc"]) < utc_minute(earlier["arrive_utc"]):
                 problems.append(f"{direction}: {earlier['segment_id']} does not connect to {later['segment_id']}")

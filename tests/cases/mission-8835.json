@@ -1,5 +1,5 @@
 {
- "scenario": "luxembourg-hotel-ceiling",
+ "scenario": "mission-8835",
  "note": "Rail both ways. Span 2 days 647 min = 3527 + 120 = 3647: 14200 x 3647 / 1440 = 35963.47 -> 35963. Night 1 at exactly the 17800 ceiling is paid; night 2 at 17801 is capped at 17800.",
  "expected": {
   "rate_country": "LU",

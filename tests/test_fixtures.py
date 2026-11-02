@@ -2,6 +2,7 @@
 fixtures hold their invariants (minute stamps recomputed here with datetime, which the plugin never uses)."""
 
 import json
+import re
 from datetime import UTC, datetime
 
 import pytest
@@ -10,7 +11,7 @@ from helpers import DATA, ROOT, SCENARIOS
 from contract import Country, EcScenario
 from plugin.fixtures import scenario as load_scenario
 from plugin.fixtures import world
-from plugin.world import EPOCH, SCENARIO_KEYS, schema_problems, trip_request
+from plugin.world import EPOCH, SCENARIO_KEYS, is_overnight, schema_problems, trip_request
 
 PINNED_RATES = {  # Regulation (EU) 2025/693 Article 1 table (hotel ceiling, daily allowance), EUR; UK from C(2026) 634
     "BE": (171, 132), "BG": (121, 78), "CZ": (149, 98), "DK": (208, 172), "DE": (154, 123), "EE": (118, 125),
@@ -110,3 +111,26 @@ def test_every_scenario_has_a_file_and_no_more() -> None:
 def test_gitignore_keeps_the_bundled_data() -> None:
     ignored = (ROOT / ".gitignore").read_text(encoding="utf-8").split()
     assert not any(pattern in ignored for pattern in ("*.json", "*.md", "data/", "src/"))
+
+
+@pytest.mark.parametrize("scenario", SCENARIOS)
+def test_scenario_ids_are_neutral(scenario: str) -> None:
+    """An id names nothing the agent could use before reading the request: no city, country, mode, rule or
+    boundary value. It is "mission-" plus the performer's staff number."""
+    assert re.fullmatch(r"mission-\d{4}", scenario), scenario
+    assert scenario == "mission-" + load_scenario(scenario)["mission_performer"]["staff_id"][1:]
+
+
+def test_informal_terms_are_never_rule_terms() -> None:
+    """"Red-eye" and "long-haul" may appear in a performer's words only; the rules use the literal conditions."""
+    for path in (DATA / "handbook.md", ROOT / "contract.py", ROOT / "product" / "product.yaml", *ROOT.joinpath("verifier").glob("*.py")):
+        text = path.read_text(encoding="utf-8").lower()
+        assert "red-eye" not in text and "red eye" not in text and "long-haul" not in text, path
+
+
+@pytest.mark.parametrize("scenario", SCENARIOS)
+def test_overnight_flags_follow_the_c2_night_window(scenario: str) -> None:
+    facts = load_scenario(scenario)
+    for direction in ("outward", "return_journey"):
+        for segment in facts[direction]["segments"]:
+            assert segment["overnight"] is is_overnight(segment["depart_utc"], segment["arrive_utc"]), segment["segment_id"]

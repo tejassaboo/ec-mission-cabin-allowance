@@ -1,5 +1,5 @@
 {
- "scenario": "tenerife-red-eye-return",
+ "scenario": "mission-6044",
  "note": "Outward O1 140 + O2 170: economy. Return R1 305 min overnight, commitment 145 min after arrival: business. Span 1200 + 240 = 1440, which is 'not more than 24 hours': 100 % = 10100, minus lunch 25 % = 2525 -> 7575. No hotel.",
  "expected": {
   "rate_country": "ES",
@@ -30,7 +30,7 @@
    "reason": "return-qualifying-correct"
   },
   {
-   "why": "upgrades the outward journey with the return's red-eye",
+   "why": "upgrades the outward journey with the return's overnight flight",
    "change": {
     "outward_class": "business",
     "outward_qualifying_segment_id": "R1"

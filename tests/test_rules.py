@@ -15,7 +15,7 @@ from plugin.rules import (
     oracle,
     qualifying_segment,
 )
-from plugin.world import utc_minute
+from plugin.world import is_overnight, utc_minute
 
 SOLD = ["economy", "premium_economy", "business"]
 SPAIN = {"daily_allowance_cents": 10100, "hotel_ceiling_cents": 15400}
@@ -225,3 +225,37 @@ def test_minute_stamps() -> None:
     assert utc_minute("2027-01-01T00:00Z") == 0
     assert utc_minute("2027-03-01T00:00Z") == (31 + 28) * 1440
     assert utc_minute("2028-03-01T00:00Z") - utc_minute("2028-02-28T00:00Z") == 2 * 1440  # 2028 is a leap year
+
+
+def test_utc_minute_arithmetic_ignores_the_dst_change() -> None:
+    # EU clocks go forward at 2027-03-28T01:00Z. Stamps are UTC, so a span across it is still six hours,
+    # although Brussels wall clocks would show seven; and a span across midnight or a month end is plain minutes.
+    assert utc_minute("2027-03-28T04:00Z") - utc_minute("2027-03-27T22:00Z") == 360
+    assert utc_minute("2027-03-01T00:01Z") - utc_minute("2027-02-28T23:59Z") == 2
+    assert utc_minute("2028-01-01T00:30Z") - utc_minute("2027-12-31T23:30Z") == 60
+
+
+def test_a_transit_country_never_sets_the_rate() -> None:
+    # Brussels to Las Palmas through Lisbon: the mission is in Spain, so Spain's 10100 applies, not Portugal's 9500.
+    outward = air(flight("O1", 600, 150, destination="LIS"), flight("O2", 800, 180, origin="LIS"))
+    back = air(flight("R1", 3000, 290, origin="LPA", destination="BRU"))
+    claim = oracle(world(), mission(outward, back, country="ES"))
+    assert claim["rate_country"] == "ES"
+    assert claim["dsa_cents"] == half_up(10100 * claim["mission_minutes"], 1440)
+
+
+@pytest.mark.parametrize(
+    ("depart", "arrive", "overnight"),
+    [
+        ("2027-03-09T22:00Z", "2027-03-10T03:05Z", True),  # crosses midnight
+        ("2027-02-15T23:30Z", "2027-02-16T04:30Z", True),
+        ("2027-03-09T19:00Z", "2027-03-09T21:20Z", False),  # evening, lands before midnight
+        ("2027-03-09T23:00Z", "2027-03-09T23:59Z", False),  # ends one minute before the window
+        ("2027-03-09T23:00Z", "2027-03-10T00:01Z", True),  # under way at 00:00Z
+        ("2027-03-10T04:59Z", "2027-03-10T07:00Z", True),  # departs in the last minute of the window
+        ("2027-03-10T05:00Z", "2027-03-10T07:00Z", False),  # departs as the window ends
+        ("2027-03-09T07:00Z", "2027-03-09T12:00Z", False),
+    ],
+)
+def test_the_overnight_flag_is_the_c2_night_window(depart: str, arrive: str, overnight: bool) -> None:
+    assert is_overnight(depart, arrive) is overnight

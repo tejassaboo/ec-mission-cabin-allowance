@@ -61,7 +61,7 @@ def test_rates_refuse_bad_input(countries, match) -> None:
 
 
 def test_minute_stamps_are_shown_with_the_utc_stamps() -> None:
-    request = plain_output(trip("tenerife-red-eye-return"))
+    request = plain_output(trip("mission-6044"))
     back = request["return_journey"]
     assert (back["depart_utc"], back["arrive_utc"]) == ("2027-03-09T22:00Z", "2027-03-10T03:05Z")
     assert back["arrive_minute"] - back["depart_minute"] == 305
@@ -70,8 +70,8 @@ def test_minute_stamps_are_shown_with_the_utc_stamps() -> None:
 
 
 def test_a_changed_tool_output_is_caught() -> None:
-    given = build_output({"scenario": "lille-rail-360"}, ScenarioInput)
-    changed = build_output({**plain_output(trip("lille-rail-360")), "meals_provided": []}, type(trip("lille-rail-360")))
+    given = build_output({"scenario": "mission-2290"}, ScenarioInput)
+    changed = build_output({**plain_output(trip("mission-2290")), "meals_provided": []}, type(trip("mission-2290")))
     result = verifier.verify_output("get_trip_request", given, changed, ".")
     assert result["valid"] is False and "meals_provided" in result["message"]
 
@@ -82,7 +82,7 @@ def test_the_mcp_server_serves_every_tool() -> None:
         async with stdio_client(server) as (read, write), ClientSession(read, write) as client:
             await client.initialize()
             names = sorted(tool.name for tool in (await client.list_tools()).tools)
-            answer = await client.call_tool("get_trip_request", {"scenario": "las-palmas-via-madrid"})
+            answer = await client.call_tool("get_trip_request", {"scenario": "mission-3318"})
             refused = await client.call_tool("get_country_rates", {"countries": []})
             return names, answer, refused
 

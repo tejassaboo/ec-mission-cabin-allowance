@@ -9,7 +9,7 @@ against an oracle that it computes itself.
 ## Task
 
 - **Input:** `ScenarioInput` with a single field, `scenario`, which names one of eight bundled
-  missions, for example `{"scenario": "las-palmas-via-madrid"}`.
+  missions, for example `{"scenario": "mission-3318"}`.
 - **Tools:** the agent calls `get_trip_request`, then `get_country_rates`, then `submit`. This is
   three of the six hosted steps.
 - **Output:** `EcClaimOutput`, with these fields:
@@ -30,14 +30,14 @@ and the step plan.
 
 | Scenario | Trap | Correct claim |
 |---|---|---|
-| `las-palmas-inspection-299` | One 299-min flight and a request for business "because it's basically five hours" | ES; economy / economy, no qualifying segment; 2330 min pro_rata; DSA 16342 + hotel 13800 = 30142 |
-| `las-palmas-inspection-300` | 300 min qualifies, but it is a daytime flight, so premium economy, not the requested business; return 290 min stays economy; breakfast in the room raises the ceiling to 16915 | ES; premium_economy (O1) / economy; 3740 min; 26232 − 2×1515 = 23202 + 32000 = 55202 |
-| `las-palmas-via-madrid` | A 140-min hop plus an overnight 300-min connecting flight: the whole outward direction qualifies, and the meeting 150 min after landing makes it business | ES; business (O2) / economy; 4605 min; 32299 − 2×2525 = 27249 + 29800 = 57049 |
-| `tenerife-red-eye-return` | The outward legs (140, 170) do not qualify; the overnight 305-min return with a meeting 145 min after landing does. Exactly 1440 min, which is still the 100 % band | ES; economy / business (R1); 1440 min over_12h_to_24h; 10100 − 2525 = 7575 |
-| `lille-rail-360` | Rail day trip: 240 min + 60 + 60 = 360, the top of the 20 % band; the breakfast reduction comes off the amount received | FR; rail_first_class both; 360 min up_to_6h; 2540 − 381 = 2159 |
-| `lille-rail-361` | One minute more: 361 min, the 50 % band | FR; rail_first_class both; 361 min over_6h_to_12h; 6350 |
-| `luxembourg-hotel-ceiling` | Nights at exactly the €178 ceiling and at €178.01; a "Benelux" distractor quoting the Dutch ceiling | LU; rail_first_class both; 3647 min; 35963 + 17800 + 17800 = 71563 |
-| `london-levy-derogation` | UK rate row; €220 + €10 levy (over only because of the tax, so paid) vs €229 + €10 (room itself over, so capped at €226); a dinner provided | GB; rail_first_class both; 3609 min; 38095 − 3800 = 34295 + 23000 + 22600 = 79895 |
+| `mission-4127` | One 299-min flight and a request for business "because it's basically five hours" | ES; economy / economy, no qualifying segment; 2330 min pro_rata; DSA 16342 + hotel 13800 = 30142 |
+| `mission-5203` | 300 min qualifies, but it is a daytime flight, so premium economy, not the requested business; return 290 min stays economy; breakfast in the room raises the ceiling to 16915 | ES; premium_economy (O1) / economy; 3740 min; 26232 − 2×1515 = 23202 + 32000 = 55202 |
+| `mission-3318` | A 140-min hop plus an overnight 300-min connecting flight: the whole outward direction qualifies, and the meeting 150 min after landing makes it business | ES; business (O2) / economy; 4605 min; 32299 − 2×2525 = 27249 + 29800 = 57049 |
+| `mission-6044` | The outward legs (140, 170) do not qualify; the overnight 305-min return with a meeting 145 min after landing does. Exactly 1440 min, which is still the 100 % band | ES; economy / business (R1); 1440 min over_12h_to_24h; 10100 − 2525 = 7575 |
+| `mission-2290` | Rail day trip: 240 min + 60 + 60 = 360, the top of the 20 % band; the breakfast reduction comes off the amount received | FR; rail_first_class both; 360 min up_to_6h; 2540 − 381 = 2159 |
+| `mission-7712` | One minute more: 361 min, the 50 % band | FR; rail_first_class both; 361 min over_6h_to_12h; 6350 |
+| `mission-8835` | Nights at exactly the €178 ceiling and at €178.01; a "Benelux" distractor quoting the Dutch ceiling | LU; rail_first_class both; 3647 min; 35963 + 17800 + 17800 = 71563 |
+| `mission-9150` | UK rate row; €220 + €10 levy (over only because of the tax, so paid) vs €229 + €10 (room itself over, so capped at €226); a dinner provided | GB; rail_first_class both; 3609 min; 38095 − 3800 = 34295 + 23000 + 22600 = 79895 |
 
 ## Tools
 
@@ -82,6 +82,14 @@ them against the EUR-Lex texts of C(2025) 2495 and Regulation (EU) 2025/693 befo
 - The cabin rule's "when suitable" and "times of meetings" are judgment calls, settled by the toy rule C2
   (a 180-minute meeting window, overnight flag on the long segment). The Guide says premium economy
   "should be envisaged"; C2 makes that preference binding.
+- "Overnight" is not defined by the Guide. C2 defines a segment's `overnight` flag as "under way at some minute
+  from 00:00 to 04:59 UTC", which is within an hour of local night for every mission here (Western Europe,
+  winter time). The fixtures carry the flag, `schema_problems` checks it against the definition, and the agent
+  reads it rather than recomputing it.
+- Scenario ids are neutral (`mission-<staff number>`). The first build used city-and-boundary ids such as
+  `lille-rail-360`, and in three paid runs the model looked up the country's rates in the same step as it read
+  the request, that is, from the id alone; the ids were renamed in the logic audit so that the tools alone
+  carry the facts.
 - How hotel-breakfast and meal reductions interact with a pro-rata allowance is not spelled out; C5 fixes it.
 - Non-EU rates other than the UK exist only in a 2021 agency copy, so no scenario uses them.
 - Fares, mission extensions, long stays and the other items under "Rules not in scope" are not modelled.
@@ -142,7 +150,11 @@ How it scores:
   its gold answer passes, and broken answers fail with the expected reason code;
 - structured input and output: every contract field is typed and described; the graded output holds only
   Enums, ints and segment ids; `request_text` is flavour only (the answer is unchanged when it is blanked);
-- the verifier returns a failed verdict, and never raises, for an unknown task or tool id and malformed data.
+- the verifier returns a failed verdict, and never raises, for an unknown task or tool id, an unknown rate
+  country and malformed data;
+- audit additions: UTC minute arithmetic across the DST change, midnight, a month end and a year end; a transit
+  country never sets the rate; every fixture's `overnight` flag equals the C2 night window; scenario ids are
+  neutral; "red-eye" and "long-haul" never appear as rule terms.
 
 ## Layout
 
@@ -173,5 +185,5 @@ uv run ruff check .
 ```
 
 To run the agent, use `nanoagent plugin agent config=agent.yaml home=<run folder>` with `arguments` set to a JSON
-file such as `{"scenario": "las-palmas-via-madrid"}`. It needs `OPENROUTER_API_KEY` in the environment, not in
+file such as `{"scenario": "mission-3318"}`. It needs `OPENROUTER_API_KEY` in the environment, not in
 this repo.

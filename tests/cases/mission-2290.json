@@ -1,5 +1,5 @@
 {
- "scenario": "lille-rail-360",
+ "scenario": "mission-2290",
  "note": "Rail both ways: rail_first_class. Span 240 + 60 + 60 = 360, 'up to and including 6 hours': 20 % of 12700 = 2540, minus breakfast 15 % of the amount received = 381 -> 2159.",
  "expected": {
   "rate_country": "FR",

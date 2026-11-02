@@ -1,5 +1,5 @@
 {
- "scenario": "lille-rail-361",
+ "scenario": "mission-7712",
  "note": "Rail both ways. Span 241 + 120 = 361 > 360: 50 % of 12700 = 6350.",
  "expected": {
   "rate_country": "FR",

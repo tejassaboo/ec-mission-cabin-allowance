@@ -30,8 +30,8 @@ ORDER = [
     "dsa-correct",
     "hotel-correct",
 ]
-MADRID = case("las-palmas-via-madrid")["expected"]
-TENERIFE = case("tenerife-red-eye-return")["expected"]
+MADRID = case("mission-3318")["expected"]
+TENERIFE = case("mission-6044")["expected"]
 
 
 @pytest.mark.parametrize("scenario", SCENARIOS)
@@ -55,36 +55,36 @@ def test_each_broken_answer_fails_with_its_reason_code(scenario: str, index: int
 
 
 def test_a_failed_stage_leaves_later_stages_unchecked() -> None:
-    result = verdict("las-palmas-via-madrid", {**MADRID, "outward_qualifying_segment_id": "X9"})
+    result = verdict("mission-3318", {**MADRID, "outward_qualifying_segment_id": "X9"})
     states = {entry["id"]: entry["ok"] for entry in result["details"]["constraints"]}
     assert states["outward-segment-exists"] is False
     assert all(states[identifier] is None for identifier in ORDER[3:])
 
 
 def test_messages_name_the_rule_and_the_numbers() -> None:
-    result = verdict("las-palmas-inspection-299", {**case("las-palmas-inspection-299")["expected"], "outward_class": "business", "outward_qualifying_segment_id": "O1"})
+    result = verdict("mission-4127", {**case("mission-4127")["expected"], "outward_class": "business", "outward_qualifying_segment_id": "O1"})
     assert result["message"] == "outward-class-consistent: named qualifying segment O1 flies 299 min, which is not >= 300"
-    result = verdict("las-palmas-via-madrid", {**MADRID, "outward_class": "economy", "outward_qualifying_segment_id": None})
+    result = verdict("mission-3318", {**MADRID, "outward_class": "economy", "outward_qualifying_segment_id": None})
     assert "O2 is the first outward segment with >= 300 min (O1 140 min, O2 300 min)" in result["message"]
     assert "qualifies the whole outward journey" in result["message"]
-    result = verdict("lille-rail-360", {**case("lille-rail-360")["expected"], "mission_minutes": 480, "dsa_band": "over_6h_to_12h", "dsa_cents": 5397, "total_cents": 5397})
+    result = verdict("mission-2290", {**case("mission-2290")["expected"], "mission_minutes": 480, "dsa_band": "over_6h_to_12h", "dsa_cents": 5397, "total_cents": 5397})
     assert "240 min, plus 60 (rail) + 60 (rail) = 360" in result["message"] and result["message"].endswith("(+2 more)")
 
 
 def test_a_message_counts_the_other_failures() -> None:
-    result = verdict("las-palmas-via-madrid", {**MADRID, "outward_class": "premium_economy", "return_class": "economy", "dsa_cents": 1, "total_cents": 29801})
+    result = verdict("mission-3318", {**MADRID, "outward_class": "premium_economy", "return_class": "economy", "dsa_cents": 1, "total_cents": 29801})
     assert result["message"].startswith("outward-class-correct:") and result["message"].endswith("(+1 more)")
 
 
 def test_a_wrong_answer_key_is_caught_before_the_submission() -> None:
     wrong_key = build_output({**MADRID, "outward_class": "premium_economy"}, EcClaimOutput)
-    result = verifier.verify_task(TASK, arguments("las-palmas-via-madrid"), build_output(MADRID, EcClaimOutput), wrong_key, ".")
+    result = verifier.verify_task(TASK, arguments("mission-3318"), build_output(MADRID, EcClaimOutput), wrong_key, ".")
     assert result["valid"] is False and result["message"].startswith("reference-matches-oracle")
 
 
 def test_without_a_pinned_reference_the_oracle_still_decides() -> None:
-    assert verdict("las-palmas-via-madrid", MADRID, pinned=False)["valid"] is True
-    assert verdict("las-palmas-via-madrid", {**MADRID, "outward_class": "premium_economy"}, pinned=False)["valid"] is False
+    assert verdict("mission-3318", MADRID, pinned=False)["valid"] is True
+    assert verdict("mission-3318", {**MADRID, "outward_class": "premium_economy"}, pinned=False)["valid"] is False
 
 
 @pytest.mark.parametrize(
@@ -106,7 +106,7 @@ def test_without_a_pinned_reference_the_oracle_still_decides() -> None:
     ],
 )
 def test_incorrect_missing_and_inconsistent_answers(change: dict, reason: str) -> None:
-    result = verdict("tenerife-red-eye-return", {**TENERIFE, **change})
+    result = verdict("mission-6044", {**TENERIFE, **change})
     assert result["valid"] is False and result["message"].split(":")[0] == reason, result["message"]
 
 
@@ -122,7 +122,7 @@ def test_incorrect_missing_and_inconsistent_answers(change: dict, reason: str) -
         {**TENERIFE, "rate_country": "Spain"},
         {key: value for key, value in TENERIFE.items() if key != "hotel_cents"},  # missing field
         {key: value for key, value in TENERIFE.items() if key != "outward_qualifying_segment_id"},  # nullable still required
-        {**TENERIFE, "notes": "red-eye"},  # extra field
+        {**TENERIFE, "notes": "overnight"},  # extra field
         {**TENERIFE, "outward_class": None},  # null for a non-optional field
         ["ES", "economy"],  # not an object
     ],
@@ -142,12 +142,12 @@ def test_non_json_output_never_parses() -> None:
     [
         (None, None),
         ("nonsense", 7),
-        (arguments("tenerife-red-eye-return"), None),
-        (arguments("tenerife-red-eye-return"), {"rate_country": "ES"}),
+        (arguments("mission-6044"), None),
+        (arguments("mission-6044"), {"rate_country": "ES"}),
         ({"scenario": "no-such-mission"}, TENERIFE),
         ({"scenario": "../../etc/passwd"}, TENERIFE),
-        (arguments("tenerife-red-eye-return"), {**TENERIFE, "dsa_cents": "lots"}),
-        (arguments("tenerife-red-eye-return"), {**TENERIFE, "outward_qualifying_segment_id": ["O1"]}),
+        (arguments("mission-6044"), {**TENERIFE, "dsa_cents": "lots"}),
+        (arguments("mission-6044"), {**TENERIFE, "outward_qualifying_segment_id": ["O1"]}),
     ],
 )
 def test_the_verifier_never_raises(arguments_value, output_value) -> None:
@@ -160,10 +160,10 @@ def test_the_verifier_never_raises(arguments_value, output_value) -> None:
 def test_an_unknown_task_or_tool_id_is_a_failed_verdict_not_an_exception() -> None:
     gold = build_output(TENERIFE, EcClaimOutput)
     for result in (
-        verifier.verify_task("claim-mission", arguments("tenerife-red-eye-return"), gold, None, "."),
-        verifier.verify_task(None, arguments("tenerife-red-eye-return"), gold, None, "."),
-        verifier.verify_task("get_trip_request", arguments("tenerife-red-eye-return"), gold, None, "."),
-        verifier.verify_input("lookup_rates", arguments("tenerife-red-eye-return")),
+        verifier.verify_task("claim-mission", arguments("mission-6044"), gold, None, "."),
+        verifier.verify_task(None, arguments("mission-6044"), gold, None, "."),
+        verifier.verify_task("get_trip_request", arguments("mission-6044"), gold, None, "."),
+        verifier.verify_input("lookup_rates", arguments("mission-6044")),
         verifier.verify_output("lookup_rates", None, None, "."),
         verifier.verify_output("get_trip_request", None, None, "."),
         verifier.verify_output("get_country_rates", {"countries": ["XX"]}, None, "."),
@@ -190,6 +190,28 @@ def test_rates_input_checks(raw: dict, valid: bool) -> None:
 
 
 def test_the_reference_tool_output_is_checked_against_the_oracle() -> None:
-    good = verifier.verify_output("compute_mission_claim", arguments("lille-rail-361"), reference("lille-rail-361"), ".")
-    bad = verifier.verify_output("compute_mission_claim", arguments("lille-rail-361"), reference("lille-rail-360"), ".")
+    good = verifier.verify_output("compute_mission_claim", arguments("mission-7712"), reference("mission-7712"), ".")
+    bad = verifier.verify_output("compute_mission_claim", arguments("mission-7712"), reference("mission-2290"), ".")
     assert good["valid"] is True and bad["valid"] is False
+
+
+def test_an_unknown_rate_country_is_a_failed_verdict_not_an_exception(monkeypatch) -> None:
+    """A scenario whose country has no rate row (which the fixture tests forbid) still gets a verdict."""
+    from verifier import claim
+
+    world, scenario = claim.fixtures("mission-6044")
+    monkeypatch.setattr(claim, "fixtures", lambda _scenario: (world, {**scenario, "destination_country": "XX"}))
+    result = verifier.verify_task(TASK, arguments("mission-6044"), build_output(TENERIFE, EcClaimOutput), None, ".")
+    assert result["valid"] is False and result["score"] == 0.0 and result["message"].startswith("verifier-error")
+    json.dumps(result)
+
+
+def test_the_verifier_also_catches_an_overnight_flag_that_breaks_c2() -> None:
+    """schema_problems, which the fixture tests run, rejects a daytime flight flagged overnight."""
+    from plugin.fixtures import scenario as load_scenario
+    from plugin.fixtures import world
+    from plugin.world import schema_problems
+
+    facts = load_scenario("mission-5203")
+    flagged = {**facts, "outward": {**facts["outward"], "segments": [{**facts["outward"]["segments"][0], "overnight": True}]}}
+    assert any("overnight flag" in problem for problem in schema_problems(world(), flagged))

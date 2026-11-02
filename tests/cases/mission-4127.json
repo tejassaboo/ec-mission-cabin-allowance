@@ -1,5 +1,5 @@
 {
- "scenario": "las-palmas-inspection-299",
+ "scenario": "mission-4127",
  "note": "O1 flies 299 min (< 300) and R1 290: economy both ways. Span 09 Feb 07:00Z to 10 Feb 17:50Z = 2090 min + 120 + 120 = 2330 > 1440, pro rata: 10100 x 2330 / 1440 = 16342.36 -> 16342. One night EUR 138 under the EUR 154 ceiling.",
  "expected": {
   "rate_country": "ES",
