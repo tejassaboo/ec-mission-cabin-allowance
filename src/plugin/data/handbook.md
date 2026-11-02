@@ -4,7 +4,7 @@ Sources, all downloaded on 2026-11-02:
 
 - Commission Decision C(2025) 2495 final of 13 May 2025, "Guide to missions and authorised travel" (it repeals C(2017) 5323). Pinned copy: the official Commission-format text annexed to EMA's decision, https://www.ema.europa.eu/en/documents/other/ema-decision-adoption-analogy-commission-decision-c-2025-2495_en.pdf (sha256 422471ab0b249edbed70d686e085fbae4d43726bd83e9abce2437172cc4f885b), cross-checked against EU-Rail's copy (sha256 34268dbf27090572c7608db77432129a24af9019a106fb76605b7e47f1c5a379).
 - Member State rates: Commission Delegated Regulation (EU) 2025/693 (OJ 12.5.2025, in force 13.5.2025), pinned from Council document ST 6686/25, https://data.consilium.europa.eu/doc/document/ST-6686-2025-INIT/en/pdf (sha256 72f2ead02e850a9b06b4306e72ffdca5f24542ce07121955d8d7881a506fd2c2), whose table matches a mirror of the OJ text.
-- United Kingdom rates: Commission Decision C(2026) 634 of 5 February 2026, EU-Rail copy (sha256 ff4e39e7ec770c4be2f40e0c25a5078afb0b315d4f35da2662164d4b73f8a482).
+- United Kingdom rates: Commission Decision C(2026) 634 of 5 February 2026, EU-Rail copy, https://rail-research.europa.eu/wp-content/uploads/2026/07/EU-RAIL_GB_Decision_7_26_Missions-outside-EU_Annex.pdf (sha256 ff4e39e7ec770c4be2f40e0c25a5078afb0b315d4f35da2662164d4b73f8a482).
 
 EUR-Lex refused automated download, so these are EU-agency copies, not the EUR-Lex originals. A human should confirm them against EUR-Lex (C(2025) 2495 and Regulation (EU) 2025/693) before relying on them. This handbook is our own paraphrase for a toy task, not the official text. Where the two differ, this handbook governs the task.
 
