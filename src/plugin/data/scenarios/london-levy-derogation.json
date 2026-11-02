@@ -1,0 +1,63 @@
+{
+ "scenario": "london-levy-derogation",
+ "request_text": "EU-UK Trade Specialised Committee in London, Eurostar both ways. The hotel added a visitor levy of EUR 10 a night on top of the room: EUR 220 + 10 the first night and EUR 229 + 10 the second, after they moved me to another room. The Committee hosted a dinner. My unit's old spreadsheet still has the 2021 UK figures if you need them.",
+ "mission_performer": {
+  "staff_id": "S9150",
+  "name": "Claire Dubois",
+  "directorate_general": "DG TRADE"
+ },
+ "place_of_employment": "Brussels",
+ "destination_city": "London",
+ "destination_country": "GB",
+ "outward": {
+  "mode": "rail",
+  "segments": [
+   {
+    "segment_id": "O1",
+    "service": "ES 9113",
+    "origin": "ZYR",
+    "destination": "QQS",
+    "depart_utc": "2027-02-02T07:56Z",
+    "arrive_utc": "2027-02-02T09:57Z",
+    "in_air_minutes": null,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [],
+  "first_commitment_utc": "2027-02-02T11:00Z"
+ },
+ "return_journey": {
+  "mode": "rail",
+  "segments": [
+   {
+    "segment_id": "R1",
+    "service": "ES 9152",
+    "origin": "QQS",
+    "destination": "ZYR",
+    "depart_utc": "2027-02-04T16:01Z",
+    "arrive_utc": "2027-02-04T18:05Z",
+    "in_air_minutes": null,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [],
+  "first_commitment_utc": null
+ },
+ "hotel_nights": [
+  {
+   "night_of": "2027-02-02",
+   "room_rate_cents": 22000,
+   "local_tax_cents": 1000,
+   "breakfast_included": false
+  },
+  {
+   "night_of": "2027-02-03",
+   "room_rate_cents": 22900,
+   "local_tax_cents": 1000,
+   "breakfast_included": false
+  }
+ ],
+ "meals_provided": [
+  "dinner"
+ ]
+}

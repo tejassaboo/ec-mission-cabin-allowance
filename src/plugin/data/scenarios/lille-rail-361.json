@@ -1,0 +1,48 @@
+{
+ "scenario": "lille-rail-361",
+ "request_text": "Site visit to a textile-recycling SME in Lille for the Single Market file. Train out at 06:52 UTC, back at 10:53 UTC: barely four hours door to door, so I suppose that is the 20 % short-mission rate?",
+ "mission_performer": {
+  "staff_id": "S7712",
+  "name": "Luca Moretti",
+  "directorate_general": "DG GROW"
+ },
+ "place_of_employment": "Brussels",
+ "destination_city": "Lille",
+ "destination_country": "FR",
+ "outward": {
+  "mode": "rail",
+  "segments": [
+   {
+    "segment_id": "O1",
+    "service": "TGV 9804",
+    "origin": "ZYR",
+    "destination": "XDB",
+    "depart_utc": "2027-03-16T06:52Z",
+    "arrive_utc": "2027-03-16T07:27Z",
+    "in_air_minutes": null,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [],
+  "first_commitment_utc": "2027-03-16T08:00Z"
+ },
+ "return_journey": {
+  "mode": "rail",
+  "segments": [
+   {
+    "segment_id": "R1",
+    "service": "TGV 9831",
+    "origin": "XDB",
+    "destination": "ZYR",
+    "depart_utc": "2027-03-16T10:18Z",
+    "arrive_utc": "2027-03-16T10:53Z",
+    "in_air_minutes": null,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [],
+  "first_commitment_utc": null
+ },
+ "hotel_nights": [],
+ "meals_provided": []
+}

@@ -1,0 +1,56 @@
+{
+ "scenario": "las-palmas-inspection-300",
+ "note": "O1 flies exactly 300 min: the outward direction qualifies. Daytime flight, so premium economy (sold) even with a meeting 150 min after landing. R1 290 min: economy. Span 3500 + 240 = 3740 min: 10100 x 3740 / 1440 = 26231.94 -> 26232, minus 2 breakfasts in the room x 1515 = 23202. Ceiling 15400 + 1515 = 16915 >= 16000, so 2 x 16000.",
+ "expected": {
+  "rate_country": "ES",
+  "outward_class": "premium_economy",
+  "outward_qualifying_segment_id": "O1",
+  "return_class": "economy",
+  "return_qualifying_segment_id": null,
+  "mission_minutes": 3740,
+  "dsa_band": "pro_rata",
+  "dsa_cents": 23202,
+  "hotel_cents": 32000,
+  "total_cents": 55202
+ },
+ "broken": [
+  {
+   "why": "books the requested business although the flight is not overnight",
+   "change": {
+    "outward_class": "business"
+   },
+   "reason": "outward-class-correct"
+  },
+  {
+   "why": "reads 'at least five hours' as more than 300 min",
+   "change": {
+    "outward_class": "economy",
+    "outward_qualifying_segment_id": null
+   },
+   "reason": "outward-qualifying-correct"
+  },
+  {
+   "why": "books the return in the same premium class",
+   "change": {
+    "return_class": "premium_economy"
+   },
+   "reason": "return-class-consistent"
+  },
+  {
+   "why": "caps each night at the unraised EUR 154 ceiling",
+   "change": {
+    "hotel_cents": 30800,
+    "total_cents": 54002
+   },
+   "reason": "hotel-correct"
+  },
+  {
+   "why": "forgets the breakfast-in-room reduction",
+   "change": {
+    "dsa_cents": 26232,
+    "total_cents": 58232
+   },
+   "reason": "dsa-correct"
+  }
+ ]
+}

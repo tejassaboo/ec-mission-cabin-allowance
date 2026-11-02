@@ -1,0 +1,48 @@
+{
+ "scenario": "las-palmas-via-madrid",
+ "note": "O1 140 + O2 300 (overnight): one long segment qualifies the whole outward journey, O1 included. Overnight long flight and the briefing 150 min after arrival, so business. R1 285: economy. Span 4365 + 240 = 4605: 10100 x 4605 / 1440 = 32298.96 -> 32299, minus lunch and dinner 2 x 2525 = 27249. Hotel 2 x 14900.",
+ "expected": {
+  "rate_country": "ES",
+  "outward_class": "business",
+  "outward_qualifying_segment_id": "O2",
+  "return_class": "economy",
+  "return_qualifying_segment_id": null,
+  "mission_minutes": 4605,
+  "dsa_band": "pro_rata",
+  "dsa_cents": 27249,
+  "hotel_cents": 29800,
+  "total_cents": 57049
+ },
+ "broken": [
+  {
+   "why": "VT-style: the short first leg keeps the outward journey in economy",
+   "change": {
+    "outward_class": "economy",
+    "outward_qualifying_segment_id": null
+   },
+   "reason": "outward-qualifying-correct"
+  },
+  {
+   "why": "premium economy despite the overnight flight and the meeting on arrival",
+   "change": {
+    "outward_class": "premium_economy"
+   },
+   "reason": "outward-class-correct"
+  },
+  {
+   "why": "names the short Madrid hop as the qualifying segment",
+   "change": {
+    "outward_qualifying_segment_id": "O1"
+   },
+   "reason": "outward-class-consistent"
+  },
+  {
+   "why": "forgets the meals provided",
+   "change": {
+    "dsa_cents": 32299,
+    "total_cents": 62099
+   },
+   "reason": "dsa-correct"
+  }
+ ]
+}

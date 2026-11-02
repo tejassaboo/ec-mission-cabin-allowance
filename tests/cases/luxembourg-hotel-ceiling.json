@@ -1,0 +1,41 @@
+{
+ "scenario": "luxembourg-hotel-ceiling",
+ "note": "Rail both ways. Span 2 days 647 min = 3527 + 120 = 3647: 14200 x 3647 / 1440 = 35963.47 -> 35963. Night 1 at exactly the 17800 ceiling is paid; night 2 at 17801 is capped at 17800.",
+ "expected": {
+  "rate_country": "LU",
+  "outward_class": "rail_first_class",
+  "outward_qualifying_segment_id": null,
+  "return_class": "rail_first_class",
+  "return_qualifying_segment_id": null,
+  "mission_minutes": 3647,
+  "dsa_band": "pro_rata",
+  "dsa_cents": 35963,
+  "hotel_cents": 35600,
+  "total_cents": 71563
+ },
+ "broken": [
+  {
+   "why": "pays the cent over the ceiling",
+   "change": {
+    "hotel_cents": 35601,
+    "total_cents": 71564
+   },
+   "reason": "hotel-correct"
+  },
+  {
+   "why": "uses the Dutch row",
+   "change": {
+    "rate_country": "NL"
+   },
+   "reason": "rate-country-correct"
+  },
+  {
+   "why": "pays a full daily allowance for each of the three calendar days",
+   "change": {
+    "dsa_cents": 42600,
+    "total_cents": 78200
+   },
+   "reason": "dsa-correct"
+  }
+ ]
+}

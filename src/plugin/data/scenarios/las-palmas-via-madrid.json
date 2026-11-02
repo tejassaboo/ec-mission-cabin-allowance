@@ -1,0 +1,82 @@
+{
+ "scenario": "las-palmas-via-madrid",
+ "request_text": "Civil-protection exercise with the Canary Islands emergency services; the dawn briefing starts at 07:00 UTC the morning I land. The only routing that gets me there in time is the evening hop to Madrid (2 h 20) and the overnight MS 1180 (exactly 5 h). I assume the Madrid hop is a short flight that has to stay economy and only the night flight can be upgraded? The regional government hosts one lunch and one dinner.",
+ "mission_performer": {
+  "staff_id": "S3318",
+  "name": "Aoife Brennan",
+  "directorate_general": "DG ECHO"
+ },
+ "place_of_employment": "Brussels",
+ "destination_city": "Las Palmas de Gran Canaria",
+ "destination_country": "ES",
+ "outward": {
+  "mode": "air",
+  "segments": [
+   {
+    "segment_id": "O1",
+    "service": "MS 402",
+    "origin": "BRU",
+    "destination": "MAD",
+    "depart_utc": "2027-02-15T19:00Z",
+    "arrive_utc": "2027-02-15T21:20Z",
+    "in_air_minutes": 140,
+    "overnight": false
+   },
+   {
+    "segment_id": "O2",
+    "service": "MS 1180",
+    "origin": "MAD",
+    "destination": "LPA",
+    "depart_utc": "2027-02-15T23:30Z",
+    "arrive_utc": "2027-02-16T04:30Z",
+    "in_air_minutes": 300,
+    "overnight": true
+   }
+  ],
+  "cabins_sold": [
+   "economy",
+   "premium_economy",
+   "business"
+  ],
+  "first_commitment_utc": "2027-02-16T07:00Z"
+ },
+ "return_journey": {
+  "mode": "air",
+  "segments": [
+   {
+    "segment_id": "R1",
+    "service": "MS 1191",
+    "origin": "LPA",
+    "destination": "BRU",
+    "depart_utc": "2027-02-18T15:00Z",
+    "arrive_utc": "2027-02-18T19:45Z",
+    "in_air_minutes": 285,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [
+   "economy",
+   "premium_economy",
+   "business"
+  ],
+  "first_commitment_utc": null
+ },
+ "hotel_nights": [
+  {
+   "night_of": "2027-02-16",
+   "room_rate_cents": 14900,
+   "local_tax_cents": 0,
+   "breakfast_included": false
+  },
+  {
+   "night_of": "2027-02-17",
+   "room_rate_cents": 14900,
+   "local_tax_cents": 0,
+   "breakfast_included": false
+  }
+ ],
+ "meals_provided": [
+  "lunch",
+  "dinner"
+ ]
+}

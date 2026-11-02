@@ -1,0 +1,56 @@
+{
+ "scenario": "tenerife-red-eye-return",
+ "note": "Outward O1 140 + O2 170: economy. Return R1 305 min overnight, commitment 145 min after arrival: business. Span 1200 + 240 = 1440, which is 'not more than 24 hours': 100 % = 10100, minus lunch 25 % = 2525 -> 7575. No hotel.",
+ "expected": {
+  "rate_country": "ES",
+  "outward_class": "economy",
+  "outward_qualifying_segment_id": null,
+  "return_class": "business",
+  "return_qualifying_segment_id": "R1",
+  "mission_minutes": 1440,
+  "dsa_band": "over_12h_to_24h",
+  "dsa_cents": 7575,
+  "hotel_cents": 0,
+  "total_cents": 7575
+ },
+ "broken": [
+  {
+   "why": "counts two calendar dates as more than 24 hours",
+   "change": {
+    "dsa_band": "pro_rata"
+   },
+   "reason": "band-fits-minutes"
+  },
+  {
+   "why": "keeps the return in economy because the outward journey does not qualify",
+   "change": {
+    "return_class": "economy",
+    "return_qualifying_segment_id": null
+   },
+   "reason": "return-qualifying-correct"
+  },
+  {
+   "why": "upgrades the outward journey with the return's red-eye",
+   "change": {
+    "outward_class": "business",
+    "outward_qualifying_segment_id": "R1"
+   },
+   "reason": "outward-segment-exists"
+  },
+  {
+   "why": "premium economy on the overnight return with a meeting on arrival",
+   "change": {
+    "return_class": "premium_economy"
+   },
+   "reason": "return-class-correct"
+  },
+  {
+   "why": "forgets the lunch provided",
+   "change": {
+    "dsa_cents": 10100,
+    "total_cents": 10100
+   },
+   "reason": "dsa-correct"
+  }
+ ]
+}

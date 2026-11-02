@@ -1,0 +1,43 @@
+{
+ "scenario": "lille-rail-360",
+ "note": "Rail both ways: rail_first_class. Span 240 + 60 + 60 = 360, 'up to and including 6 hours': 20 % of 12700 = 2540, minus breakfast 15 % of the amount received = 381 -> 2159.",
+ "expected": {
+  "rate_country": "FR",
+  "outward_class": "rail_first_class",
+  "outward_qualifying_segment_id": null,
+  "return_class": "rail_first_class",
+  "return_qualifying_segment_id": null,
+  "mission_minutes": 360,
+  "dsa_band": "up_to_6h",
+  "dsa_cents": 2159,
+  "hotel_cents": 0,
+  "total_cents": 2159
+ },
+ "broken": [
+  {
+   "why": "adds the two-hour air allowance to a train trip",
+   "change": {
+    "mission_minutes": 480,
+    "dsa_band": "over_6h_to_12h",
+    "dsa_cents": 5397,
+    "total_cents": 5397
+   },
+   "reason": "mission-minutes-correct"
+  },
+  {
+   "why": "takes the breakfast reduction from the full daily allowance",
+   "change": {
+    "dsa_cents": 635,
+    "total_cents": 635
+   },
+   "reason": "dsa-correct"
+  },
+  {
+   "why": "books the train as economy",
+   "change": {
+    "outward_class": "economy"
+   },
+   "reason": "outward-class-consistent"
+  }
+ ]
+}

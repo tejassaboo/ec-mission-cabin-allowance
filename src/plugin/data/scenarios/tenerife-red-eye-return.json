@@ -1,0 +1,68 @@
+{
+ "scenario": "tenerife-red-eye-return",
+ "request_text": "Monitoring visit to an ERDF-funded desalination plant on Tenerife, there and back in one go: out through Madrid in the morning, home on the overnight MS 1397 landing at 03:05 UTC, and the Monitoring Committee starts at 05:30 UTC. The trip runs over two calendar days, so I assume it counts as more than a day. The Cabildo hosted lunch.",
+ "mission_performer": {
+  "staff_id": "S6044",
+  "name": "Marek Kowalczyk",
+  "directorate_general": "DG REGIO"
+ },
+ "place_of_employment": "Brussels",
+ "destination_city": "Santa Cruz de Tenerife",
+ "destination_country": "ES",
+ "outward": {
+  "mode": "air",
+  "segments": [
+   {
+    "segment_id": "O1",
+    "service": "MS 404",
+    "origin": "BRU",
+    "destination": "MAD",
+    "depart_utc": "2027-03-09T07:05Z",
+    "arrive_utc": "2027-03-09T09:25Z",
+    "in_air_minutes": 140,
+    "overnight": false
+   },
+   {
+    "segment_id": "O2",
+    "service": "MS 1310",
+    "origin": "MAD",
+    "destination": "TFN",
+    "depart_utc": "2027-03-09T10:30Z",
+    "arrive_utc": "2027-03-09T13:20Z",
+    "in_air_minutes": 170,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [
+   "economy",
+   "premium_economy",
+   "business"
+  ],
+  "first_commitment_utc": "2027-03-09T14:30Z"
+ },
+ "return_journey": {
+  "mode": "air",
+  "segments": [
+   {
+    "segment_id": "R1",
+    "service": "MS 1397",
+    "origin": "TFN",
+    "destination": "BRU",
+    "depart_utc": "2027-03-09T22:00Z",
+    "arrive_utc": "2027-03-10T03:05Z",
+    "in_air_minutes": 305,
+    "overnight": true
+   }
+  ],
+  "cabins_sold": [
+   "economy",
+   "premium_economy",
+   "business"
+  ],
+  "first_commitment_utc": "2027-03-10T05:30Z"
+ },
+ "hotel_nights": [],
+ "meals_provided": [
+  "lunch"
+ ]
+}

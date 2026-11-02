@@ -1,0 +1,50 @@
+{
+ "scenario": "lille-rail-360",
+ "request_text": "Morning workshop at the Lille regional employment agency, back in Brussels for lunch. The agency serves a working breakfast. A colleague told me to add two hours at each end 'like for flights', which would put me on the half-day rate.",
+ "mission_performer": {
+  "staff_id": "S2290",
+  "name": "Sophie Vermeulen",
+  "directorate_general": "DG EMPL"
+ },
+ "place_of_employment": "Brussels",
+ "destination_city": "Lille",
+ "destination_country": "FR",
+ "outward": {
+  "mode": "rail",
+  "segments": [
+   {
+    "segment_id": "O1",
+    "service": "TGV 9812",
+    "origin": "ZYR",
+    "destination": "XDB",
+    "depart_utc": "2027-02-23T07:30Z",
+    "arrive_utc": "2027-02-23T08:05Z",
+    "in_air_minutes": null,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [],
+  "first_commitment_utc": "2027-02-23T08:30Z"
+ },
+ "return_journey": {
+  "mode": "rail",
+  "segments": [
+   {
+    "segment_id": "R1",
+    "service": "TGV 9849",
+    "origin": "XDB",
+    "destination": "ZYR",
+    "depart_utc": "2027-02-23T10:55Z",
+    "arrive_utc": "2027-02-23T11:30Z",
+    "in_air_minutes": null,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [],
+  "first_commitment_utc": null
+ },
+ "hotel_nights": [],
+ "meals_provided": [
+  "breakfast"
+ ]
+}

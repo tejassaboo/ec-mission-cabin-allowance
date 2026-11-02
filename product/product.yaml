@@ -1,0 +1,12 @@
+_ > nanoagent.plugin.v0001.ProductConfig:
+tagline: "Five hours in the air, one direction at a time: claim an EC mission the way the Guide counts it"
+summary: "An agent prepares one European Commission mission claim under a toy handbook paraphrased from the 2025 Guide to Missions (C(2025) 2495): premium economy or business only when a direction has a segment of at least 300 flying minutes, judged separately for the outward and return journeys; the 20/50/100 % and pro-rata allowance bands with fixed rail and air buffers; meal and hotel-breakfast reductions; and per-country hotel ceilings with the local-tax derogation. A deterministic verifier checks every field. Ask it to run a scenario: las-palmas-inspection-299, las-palmas-inspection-300, las-palmas-via-madrid, tenerife-red-eye-return, lille-rail-360, lille-rail-361, luxembourg-hotel-ceiling or london-levy-derogation."
+highlights:
+  - "Outward and return cabins are separate typed fields, so a qualifying red-eye home never upgrades the trip out"
+  - "Every trap is a real boundary: 299 vs 300 flying minutes, 360 vs 361 mission minutes, a hotel one cent over its ceiling"
+  - "Rates bundled from Regulation (EU) 2025/693 and C(2026) 634; fully offline, integer cents, no LLM judge"
+steps:
+  - "Name a scenario, for example las-palmas-via-madrid"
+  - "The agent reads the mission and looks up the destination's rate row"
+  - "It submits each direction's class, the mission minutes and band, the allowance, the hotel and the total"
+  - "The verifier explains the verdict with a reason code"

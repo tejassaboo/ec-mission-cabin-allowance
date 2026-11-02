@@ -1,0 +1,37 @@
+{
+ "scenario": "lille-rail-361",
+ "note": "Rail both ways. Span 241 + 120 = 361 > 360: 50 % of 12700 = 6350.",
+ "expected": {
+  "rate_country": "FR",
+  "outward_class": "rail_first_class",
+  "outward_qualifying_segment_id": null,
+  "return_class": "rail_first_class",
+  "return_qualifying_segment_id": null,
+  "mission_minutes": 361,
+  "dsa_band": "over_6h_to_12h",
+  "dsa_cents": 6350,
+  "hotel_cents": 0,
+  "total_cents": 6350
+ },
+ "broken": [
+  {
+   "why": "keeps the 20 % band at 361 min",
+   "change": {
+    "dsa_band": "up_to_6h",
+    "dsa_cents": 2540,
+    "total_cents": 2540
+   },
+   "reason": "band-fits-minutes"
+  },
+  {
+   "why": "forgets the rail allowance and counts 241 min",
+   "change": {
+    "mission_minutes": 241,
+    "dsa_band": "up_to_6h",
+    "dsa_cents": 2540,
+    "total_cents": 2540
+   },
+   "reason": "mission-minutes-correct"
+  }
+ ]
+}

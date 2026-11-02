@@ -1,0 +1,94 @@
+_ > nanoagent.plugin.v0001.ManifestConfig:
+id: ec-mission-cabin-allowance
+name: EC Mission Cabin Allowance
+version: 0.1.0
+status: ready
+spec: nanoagent.plugin/v0001
+
+runtime > nanoagent.plugin.v0001.RuntimeConfig:
+  type: mcp_stdio
+  command: [uv, run, --frozen, python, -m, plugin]
+
+permissions > nanoagent.plugin.v0001.PermissionsConfig:
+  network > nanoagent.plugin.v0001.NetworkConfig:
+    hosts: []
+  filesystem > nanoagent.plugin.v0001.FilesystemConfig:
+    write: []
+
+# One entry per contract.Tool; its input and output classes are contract.TOOLS's.
+tools > dict[contract.Tool, nanoagent.plugin.v0001.ToolConfig]:
+  get_trip_request:
+    description: Read a scenario's mission, with its outward and return journeys, minute stamps, cabins sold, commitments, hotel nights and meals provided
+  get_country_rates:
+    description: Look up the daily subsistence allowance and hotel ceiling of each of several countries, in EUR cents
+  compute_mission_claim:
+    description: Compute the one claim the toy handbook gives for a scenario (the task's answer key)
+
+# One entry per contract.Task; its input class is contract.TASKS's.
+tasks > dict[contract.Task, nanoagent.plugin.v0001.TaskConfig]:
+  ec-mission-claim:
+    description: Work out an EC mission's travel class per direction, daily subsistence allowance and hotel reimbursement under the toy Guide to Missions handbook
+    runner: agent
+    tools: [get_trip_request, get_country_rates]
+    reference: compute_mission_claim
+    instructions: |-
+      # European Commission missions: toy claim handbook
+
+      Sources, all downloaded on 2026-11-02:
+
+      - Commission Decision C(2025) 2495 final of 13 May 2025, "Guide to missions and authorised travel" (it repeals C(2017) 5323). Pinned copy: the official Commission-format text annexed to EMA's decision, https://www.ema.europa.eu/en/documents/other/ema-decision-adoption-analogy-commission-decision-c-2025-2495_en.pdf (sha256 422471ab0b249edbed70d686e085fbae4d43726bd83e9abce2437172cc4f885b), cross-checked against EU-Rail's copy (sha256 34268dbf27090572c7608db77432129a24af9019a106fb76605b7e47f1c5a379).
+      - Member State rates: Commission Delegated Regulation (EU) 2025/693 (OJ 12.5.2025, in force 13.5.2025), pinned from Council document ST 6686/25, https://data.consilium.europa.eu/doc/document/ST-6686-2025-INIT/en/pdf (sha256 72f2ead02e850a9b06b4306e72ffdca5f24542ce07121955d8d7881a506fd2c2), whose table matches a mirror of the OJ text.
+      - United Kingdom rates: Commission Decision C(2026) 634 of 5 February 2026, EU-Rail copy (sha256 ff4e39e7ec770c4be2f40e0c25a5078afb0b315d4f35da2662164d4b73f8a482).
+
+      EUR-Lex refused automated download, so these are EU-agency copies, not the EUR-Lex originals. A human should confirm them against EUR-Lex (C(2025) 2495 and Regulation (EU) 2025/693) before relying on them. This handbook is our own paraphrase for a toy task, not the official text. Where the two differ, this handbook governs the task.
+
+      You prepare the claim for one mission by a Brussels-based staff member: the travel class of each direction, the mission's duration, its daily subsistence allowance (DSA) and its hotel reimbursement. Submit them.
+
+      ## Policy rules (paraphrased from the Guide, sections 2.5 to 2.7)
+
+      1. Rail travel is reimbursed at the first-class fare.
+      2. Economy is the default class for air travel.
+      3. Premium economy (when suitable) or business may be booked if the outward or the return journey includes at least one segment of at least five hours' continuous flying time.
+      4. When business is allowed, premium economy should be envisaged when available. It should be the choice, for example, when the flight is not overnight or when no meeting follows immediately after arrival.
+      5. The daily allowance and the maximum hotel allowance (ceiling) are set per country of mission.
+      6. For missions of up to 24 hours the DSA is: up to and including 6 hours, 20 % of the daily allowance; more than 6 but not more than 12 hours, 50 %; more than 12 but not more than 24 hours, 100 %. For longer missions it is pro rata to the actual duration, including the time needed to reach airports and stations.
+      7. The mission starts at the actual departure and ends at the actual arrival of the main means of transport. A fixed allowance is added before the departure and after the arrival: one hour for rail, two hours for a plane.
+      8. Breakfast is assumed not to be in the room price unless the invoice says so. When it is included, the DSA is reduced by 15 % of the daily allowance and the hotel ceiling is raised by the same amount.
+      9. Hotel costs above the ceiling are not reimbursed unless explicitly authorised. When the ceiling (raised under rule 8 where it applies) is exceeded solely because local taxes were added to the room price, a derogation is deemed granted for that amount.
+      10. A meal provided by an institution or another organisation reduces the DSA by 25 % for each lunch or dinner and 15 % for each breakfast. When only part of the DSA is received because of the mission's length, the reduction is taken from the amount received.
+
+      ## Clarifications (toy rules)
+
+      These settle every point where the real text is vague. The checker enforces exactly these.
+
+      - **C1 Which journey qualifies.** The class is decided per direction, outward and return_journey, and covers every segment of that direction. A direction qualifies when at least one of its segments has in_air_minutes of 300 or more: exactly 300 qualifies, 299 does not. Never add segments together and never count connection time. One long segment qualifies the whole direction, short connecting flights included. The qualifying segment id is the first such segment in travel order, or null when there is none. The two directions are judged independently, so one may qualify while the other does not. A direction that does not qualify is economy, whatever was requested. A rail direction (in_air_minutes null) never qualifies: its class is rail_first_class and its qualifying segment id is null.
+      - **C2 Premium economy or business.** For a qualifying air direction, (a) means some segment of 300 or more minutes has overnight true, and (b) means a meeting follows immediately after arrival: 0 ≤ first_commitment_minute − arrive_minute ≤ 180, both of that direction (a null commitment is no meeting). If premium_economy is in cabins_sold and (a) and (b) do not both hold, the class is premium_economy. Otherwise it is business if sold, else premium_economy if sold, else economy.
+      - **C3 Mission minutes.** mission_minutes = return_journey.arrive_minute − outward.depart_minute + the allowance for outward.mode + the allowance for return_journey.mode, where the allowance is 120 for air and 60 for rail. Use the given minute stamps and do no timezone arithmetic. Spanning two calendar dates does not by itself make a mission longer than 24 hours: only minutes count.
+      - **C4 Band and amount.** The band follows mission_minutes: at most 360 is up_to_6h, 361 to 720 is over_6h_to_12h, 721 to 1440 is over_12h_to_24h, more than 1440 is pro_rata. A banded amount is daily_allowance_cents × 20, 50 or 100 / 100. The pro_rata amount is daily_allowance_cents × mission_minutes / 1440, rounded half up to the cent.
+      - **C5 Reductions.** Each entry of meals_provided reduces the DSA by its rule-10 percentage of a base: the banded amount in the three short bands (the amount received), or the full daily_allowance_cents for pro_rata. Each hotel night with breakfast_included reduces it by 15 % of the full daily_allowance_cents. Round each reduction half up to the cent. dsa_cents = the amount minus all reductions, and never below 0.
+      - **C6 Hotel.** For each night, the ceiling is hotel_ceiling_cents, plus 15 % of daily_allowance_cents when breakfast_included is true. The night's charge is room_rate_cents + local_tax_cents. If room_rate_cents is at most the ceiling, reimburse the whole charge: this covers a charge within the ceiling and an excess caused solely by local tax. Otherwise reimburse exactly the ceiling. No mission here has an explicit authorisation to exceed the ceiling. hotel_cents is the sum over all nights, 0 for none.
+      - **C7 Rate country.** rate_country is destination_country, read with get_country_rates. Outermost regions use their Member State's row: the Canary Islands use Spain's. A transit country never sets the rate.
+      - **C8 Total.** total_cents = dsa_cents + hotel_cents.
+      - **C9 Facts.** The structured fields are the facts. The request text may be wrong or ask for things policy forbids, so apply the policy, not the wish.
+
+      ## Rules not in scope
+
+      The following parts of the Guide are deliberately ignored:
+
+      - the choice between rail, air, car and bus, the 550 km justification and the 40 % price variation;
+      - ticket prices and the reimbursement of travel costs (only the class is decided here);
+      - travelling in the class of an accompanied Member of the Commission;
+      - rest periods after long flights and mission extensions (personal reasons, weekends, cost savings);
+      - long stays (from day 60: 25 % less DSA and half the hotel ceiling);
+      - shared rooms and accommodation provided or paid by a third party;
+      - registration fees, incidental and local transport expenses;
+      - extra time to reach the airport granted by the line manager, and the authorising officer's discretion not to deduct a meal;
+      - destinations outside the EU other than the United Kingdom (the only other rate table we found is a 2021 copy).
+
+      ## Step plan (submit by step 5)
+
+      You have 6 steps, each tool call costs one, and the last step may not call tools.
+
+      1. Call get_trip_request with the task's scenario.
+      2. Call get_country_rates with [destination_country].
+      3. Apply C1 to C8 and call submit with every field of the claim.

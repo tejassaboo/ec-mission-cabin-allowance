@@ -1,0 +1,63 @@
+{
+ "scenario": "las-palmas-inspection-299",
+ "request_text": "Joint fisheries-control inspection at the port of Las Palmas with the Guardia Civil. AX 731 is scheduled at 4 h 59 min, five hours for all practical purposes, so please put me in business both ways: my head of unit says it is 'basically long-haul'. The Hotel Puerto Canteras charged EUR 138 for the one night.",
+ "mission_performer": {
+  "staff_id": "S4127",
+  "name": "Ines Duarte",
+  "directorate_general": "DG MARE"
+ },
+ "place_of_employment": "Brussels",
+ "destination_city": "Las Palmas de Gran Canaria",
+ "destination_country": "ES",
+ "outward": {
+  "mode": "air",
+  "segments": [
+   {
+    "segment_id": "O1",
+    "service": "AX 731",
+    "origin": "BRU",
+    "destination": "LPA",
+    "depart_utc": "2027-02-09T07:00Z",
+    "arrive_utc": "2027-02-09T11:59Z",
+    "in_air_minutes": 299,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [
+   "economy",
+   "premium_economy",
+   "business"
+  ],
+  "first_commitment_utc": "2027-02-09T14:00Z"
+ },
+ "return_journey": {
+  "mode": "air",
+  "segments": [
+   {
+    "segment_id": "R1",
+    "service": "AX 732",
+    "origin": "LPA",
+    "destination": "BRU",
+    "depart_utc": "2027-02-10T13:00Z",
+    "arrive_utc": "2027-02-10T17:50Z",
+    "in_air_minutes": 290,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [
+   "economy",
+   "premium_economy",
+   "business"
+  ],
+  "first_commitment_utc": null
+ },
+ "hotel_nights": [
+  {
+   "night_of": "2027-02-09",
+   "room_rate_cents": 13800,
+   "local_tax_cents": 0,
+   "breakfast_included": false
+  }
+ ],
+ "meals_provided": []
+}

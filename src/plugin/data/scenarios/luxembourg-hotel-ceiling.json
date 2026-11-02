@@ -1,0 +1,61 @@
+{
+ "scenario": "luxembourg-hotel-ceiling",
+ "request_text": "Two days of hearings at the Court of Justice in Kirchberg. The Hotel Alfa charged EUR 178.00 the first night and EUR 178.01 the second, after the hearing was extended. The second night is one cent over the ceiling, surely nobody minds a cent; and I heard the Benelux ceiling is the Dutch EUR 190 anyway.",
+ "mission_performer": {
+  "staff_id": "S8835",
+  "name": "Pieter de Wit",
+  "directorate_general": "Legal Service"
+ },
+ "place_of_employment": "Brussels",
+ "destination_city": "Luxembourg",
+ "destination_country": "LU",
+ "outward": {
+  "mode": "rail",
+  "segments": [
+   {
+    "segment_id": "O1",
+    "service": "IC 5107",
+    "origin": "ZYR",
+    "destination": "LUX",
+    "depart_utc": "2027-03-23T07:37Z",
+    "arrive_utc": "2027-03-23T10:47Z",
+    "in_air_minutes": null,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [],
+  "first_commitment_utc": "2027-03-23T12:30Z"
+ },
+ "return_journey": {
+  "mode": "rail",
+  "segments": [
+   {
+    "segment_id": "R1",
+    "service": "IC 5120",
+    "origin": "LUX",
+    "destination": "ZYR",
+    "depart_utc": "2027-03-25T15:12Z",
+    "arrive_utc": "2027-03-25T18:24Z",
+    "in_air_minutes": null,
+    "overnight": false
+   }
+  ],
+  "cabins_sold": [],
+  "first_commitment_utc": null
+ },
+ "hotel_nights": [
+  {
+   "night_of": "2027-03-23",
+   "room_rate_cents": 17800,
+   "local_tax_cents": 0,
+   "breakfast_included": false
+  },
+  {
+   "night_of": "2027-03-24",
+   "room_rate_cents": 17801,
+   "local_tax_cents": 0,
+   "breakfast_included": false
+  }
+ ],
+ "meals_provided": []
+}

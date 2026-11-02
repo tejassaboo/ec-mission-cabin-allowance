@@ -1,0 +1,198 @@
+[
+ {
+  "country": "AT",
+  "country_name": "Austria",
+  "daily_allowance_cents": 13100,
+  "hotel_ceiling_cents": 15800,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "BE",
+  "country_name": "Belgium",
+  "daily_allowance_cents": 13200,
+  "hotel_ceiling_cents": 17100,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "BG",
+  "country_name": "Bulgaria",
+  "daily_allowance_cents": 7800,
+  "hotel_ceiling_cents": 12100,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "CY",
+  "country_name": "Cyprus",
+  "daily_allowance_cents": 10300,
+  "hotel_ceiling_cents": 14500,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "CZ",
+  "country_name": "Czechia",
+  "daily_allowance_cents": 9800,
+  "hotel_ceiling_cents": 14900,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "DE",
+  "country_name": "Germany",
+  "daily_allowance_cents": 12300,
+  "hotel_ceiling_cents": 15400,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "DK",
+  "country_name": "Denmark",
+  "daily_allowance_cents": 17200,
+  "hotel_ceiling_cents": 20800,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "EE",
+  "country_name": "Estonia",
+  "daily_allowance_cents": 12500,
+  "hotel_ceiling_cents": 11800,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "ES",
+  "country_name": "Spain",
+  "daily_allowance_cents": 10100,
+  "hotel_ceiling_cents": 15400,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "FI",
+  "country_name": "Finland",
+  "daily_allowance_cents": 15500,
+  "hotel_ceiling_cents": 17000,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "FR",
+  "country_name": "France",
+  "daily_allowance_cents": 12700,
+  "hotel_ceiling_cents": 21200,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "GB",
+  "country_name": "United Kingdom",
+  "daily_allowance_cents": 15200,
+  "hotel_ceiling_cents": 22600,
+  "source": "c_2026_634"
+ },
+ {
+  "country": "GR",
+  "country_name": "Greece",
+  "daily_allowance_cents": 10800,
+  "hotel_ceiling_cents": 13400,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "HR",
+  "country_name": "Croatia",
+  "daily_allowance_cents": 9900,
+  "hotel_ceiling_cents": 13200,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "HU",
+  "country_name": "Hungary",
+  "daily_allowance_cents": 9300,
+  "hotel_ceiling_cents": 13500,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "IE",
+  "country_name": "Ireland",
+  "daily_allowance_cents": 14400,
+  "hotel_ceiling_cents": 19100,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "IT",
+  "country_name": "Italy",
+  "daily_allowance_cents": 11600,
+  "hotel_ceiling_cents": 17800,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "LT",
+  "country_name": "Lithuania",
+  "daily_allowance_cents": 10300,
+  "hotel_ceiling_cents": 11400,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "LU",
+  "country_name": "Luxembourg",
+  "daily_allowance_cents": 14200,
+  "hotel_ceiling_cents": 17800,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "LV",
+  "country_name": "Latvia",
+  "daily_allowance_cents": 11000,
+  "hotel_ceiling_cents": 12800,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "MT",
+  "country_name": "Malta",
+  "daily_allowance_cents": 10900,
+  "hotel_ceiling_cents": 16600,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "NL",
+  "country_name": "Netherlands",
+  "daily_allowance_cents": 13700,
+  "hotel_ceiling_cents": 19000,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "PL",
+  "country_name": "Poland",
+  "daily_allowance_cents": 9500,
+  "hotel_ceiling_cents": 12600,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "PT",
+  "country_name": "Portugal",
+  "daily_allowance_cents": 9500,
+  "hotel_ceiling_cents": 12100,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "RO",
+  "country_name": "Romania",
+  "daily_allowance_cents": 8800,
+  "hotel_ceiling_cents": 10900,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "SE",
+  "country_name": "Sweden",
+  "daily_allowance_cents": 13500,
+  "hotel_ceiling_cents": 19800,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "SI",
+  "country_name": "Slovenia",
+  "daily_allowance_cents": 10800,
+  "hotel_ceiling_cents": 14000,
+  "source": "reg_eu_2025_693"
+ },
+ {
+  "country": "SK",
+  "country_name": "Slovakia",
+  "daily_allowance_cents": 10400,
+  "hotel_ceiling_cents": 12000,
+  "source": "reg_eu_2025_693"
+ }
+]

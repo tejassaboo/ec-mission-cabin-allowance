@@ -1,0 +1,49 @@
+{
+ "scenario": "london-levy-derogation",
+ "note": "Rail both ways; UK row (C(2026) 634): 15200 / 22600. Span 3489 + 120 = 3609: 15200 x 3609 / 1440 = 38095 exactly, minus dinner 3800 = 34295. Night 1: room 22000 <= 22600, over only because of the 1000 levy, so 23000 is paid. Night 2: room 22900 > 22600, so capped at 22600.",
+ "expected": {
+  "rate_country": "GB",
+  "outward_class": "rail_first_class",
+  "outward_qualifying_segment_id": null,
+  "return_class": "rail_first_class",
+  "return_qualifying_segment_id": null,
+  "mission_minutes": 3609,
+  "dsa_band": "pro_rata",
+  "dsa_cents": 34295,
+  "hotel_cents": 45600,
+  "total_cents": 79895
+ },
+ "broken": [
+  {
+   "why": "caps the first night at the ceiling, ignoring the local-tax derogation",
+   "change": {
+    "hotel_cents": 45200,
+    "total_cents": 79495
+   },
+   "reason": "hotel-correct"
+  },
+  {
+   "why": "pays the second night in full as if the levy derogation covered the room",
+   "change": {
+    "hotel_cents": 46900,
+    "total_cents": 81195
+   },
+   "reason": "hotel-correct"
+  },
+  {
+   "why": "forgets the dinner provided",
+   "change": {
+    "dsa_cents": 38095,
+    "total_cents": 83695
+   },
+   "reason": "dsa-correct"
+  },
+  {
+   "why": "uses the place of employment's row",
+   "change": {
+    "rate_country": "BE"
+   },
+   "reason": "rate-country-correct"
+  }
+ ]
+}

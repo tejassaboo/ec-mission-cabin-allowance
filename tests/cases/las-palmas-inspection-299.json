@@ -1,0 +1,42 @@
+{
+ "scenario": "las-palmas-inspection-299",
+ "note": "O1 flies 299 min (< 300) and R1 290: economy both ways. Span 09 Feb 07:00Z to 10 Feb 17:50Z = 2090 min + 120 + 120 = 2330 > 1440, pro rata: 10100 x 2330 / 1440 = 16342.36 -> 16342. One night EUR 138 under the EUR 154 ceiling.",
+ "expected": {
+  "rate_country": "ES",
+  "outward_class": "economy",
+  "outward_qualifying_segment_id": null,
+  "return_class": "economy",
+  "return_qualifying_segment_id": null,
+  "mission_minutes": 2330,
+  "dsa_band": "pro_rata",
+  "dsa_cents": 16342,
+  "hotel_cents": 13800,
+  "total_cents": 30142
+ },
+ "broken": [
+  {
+   "why": "treats 299 min as five hours and books the requested business",
+   "change": {
+    "outward_class": "business",
+    "outward_qualifying_segment_id": "O1"
+   },
+   "reason": "outward-class-consistent"
+  },
+  {
+   "why": "forgets the two-hour air allowance at each end",
+   "change": {
+    "mission_minutes": 2090,
+    "dsa_cents": 14659,
+    "total_cents": 28459
+   },
+   "reason": "mission-minutes-correct"
+  },
+  {
+   "why": "total leaves out the hotel",
+   "change": {
+    "total_cents": 16342
+   },
+   "reason": "total-is-sum"
+  }
+ ]
+}
