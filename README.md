@@ -100,7 +100,7 @@ them against the EUR-Lex texts of C(2025) 2495 and Regulation (EU) 2025/693 befo
 
 `verifier/claim.py` reads the fixtures through `Path(__file__)`, computes the oracle with the shared `rules.py`,
 and checks the submission in four ordered stages. Each check has a stable reason code. The message names the
-first failing check and its numbers (for example `no outward segment flies >= 300 min (O1 299 min), so economy`),
+first failing check and its numbers (for example `named qualifying segment O1 flies 299 min, which is not >= 300`),
 and later stages are skipped.
 
 1. **Answer key:** `reference-matches-oracle`. The pinned reference must equal the verifier's own oracle.
@@ -118,7 +118,8 @@ and later stages are skipped.
    - `outward-qualifying-correct`, `outward-class-correct`
    - `return-qualifying-correct`, `return-class-correct`
    - `mission-minutes-correct`
-   - `dsa-band-correct`
+   - `dsa-band-correct` (implied by `band-fits-minutes` and `mission-minutes-correct`, so it only ever fails
+     alongside the latter; a test proves it)
    - `dsa-correct`
    - `hotel-correct`
 

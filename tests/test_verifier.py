@@ -76,6 +76,34 @@ def test_a_message_counts_the_other_failures() -> None:
     assert result["message"].startswith("outward-class-correct:") and result["message"].endswith("(+1 more)")
 
 
+def test_dsa_band_correct_is_implied_and_only_ever_fails_alongside_mission_minutes() -> None:
+    """band-fits-minutes pins the band to the submitted minutes, so a wrong band reaches stage 4 only with
+    wrong minutes, and mission-minutes-correct is the headline: dsa-band-correct is still checked and named."""
+    headline, alongside = [], []
+    for scenario in SCENARIOS:
+        gold = case(scenario)["expected"]
+        for band in ("up_to_6h", "over_6h_to_12h", "over_12h_to_24h", "pro_rata"):
+            for delta in (-1500, -361, -1, 1, 361, 1500):
+                minutes = gold["mission_minutes"] + delta
+                if minutes <= 0 or band == gold["dsa_band"]:
+                    continue
+                result = verdict(scenario, {**gold, "dsa_band": band, "mission_minutes": minutes})
+                failing = [entry["id"] for entry in result["details"]["constraints"] if entry["ok"] is False]
+                assert result["valid"] is False and failing[0] != "dsa-band-correct", (scenario, band, minutes)
+                headline.append(failing[0])
+                alongside.append("dsa-band-correct" in failing[1:])
+    assert set(headline) == {"band-fits-minutes", "mission-minutes-correct"}
+    assert any(alongside)  # reachable: it is named next to mission-minutes-correct
+    assert verdict("mission-2290", {**case("mission-2290")["expected"], "mission_minutes": 480, "dsa_band": "over_6h_to_12h"})["details"]["constraints"][14] == {
+        "id": "dsa-band-correct",
+        "constraint": "dsa_band follows rule 6 and C4 for the correct minutes",
+        "ok": False,
+        "expected": "up_to_6h",
+        "actual": "over_6h_to_12h",
+        "message": "360 min is band up_to_6h",
+    }
+
+
 def test_a_wrong_answer_key_is_caught_before_the_submission() -> None:
     wrong_key = build_output({**MADRID, "outward_class": "premium_economy"}, EcClaimOutput)
     result = verifier.verify_task(TASK, arguments("mission-3318"), build_output(MADRID, EcClaimOutput), wrong_key, ".")
@@ -130,11 +158,6 @@ def test_incorrect_missing_and_inconsistent_answers(change: dict, reason: str) -
 def test_malformed_outputs_are_refused_before_the_verifier(raw) -> None:
     with pytest.raises(ValueError):
         build_output(raw, EcClaimOutput)
-
-
-def test_non_json_output_never_parses() -> None:
-    with pytest.raises(json.JSONDecodeError):
-        json.loads("{rate_country: ES, outward_class: economy}")
 
 
 @pytest.mark.parametrize(

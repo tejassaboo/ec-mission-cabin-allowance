@@ -80,6 +80,17 @@ def test_the_fixtures_follow_the_schema(scenario: str) -> None:
     assert schema_problems(world(), load_scenario(scenario)) == []
 
 
+def test_the_schema_rejects_a_negative_room_rate_or_tax() -> None:
+    """C6 reads 'room rate within the ceiling' on non-negative amounts; a negative tax (a credit) would make
+    the charge and the room rate disagree about the ceiling, so the fixtures may not hold one."""
+    facts = load_scenario("mission-9150")
+    for field in ("room_rate_cents", "local_tax_cents"):
+        night = {**facts["hotel_nights"][0], field: -1}
+        problems = schema_problems(world(), {**facts, "hotel_nights": [night, *facts["hotel_nights"][1:]]})
+        assert any("negative" in problem for problem in problems), field
+    assert schema_problems(world(), facts) == []
+
+
 @pytest.mark.parametrize("scenario", SCENARIOS)
 def test_minute_stamps_agree_with_datetime(scenario: str) -> None:
     epoch = datetime.fromisoformat(f"{EPOCH}T00:00+00:00")

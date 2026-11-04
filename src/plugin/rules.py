@@ -11,8 +11,8 @@ THRESHOLD_MINUTES = 300  # C1: a segment of at least five hours' continuous flyi
 MEETING_WINDOW = 180  # C2: "a meeting immediately after arrival" means within 0..180 minutes
 BUFFER_MINUTES = {"air": 120, "rail": 60}  # C3: fixed time to reach the airport or station, each end
 BAND_PERCENT = {"up_to_6h": 20, "over_6h_to_12h": 50, "over_12h_to_24h": 100}  # rule 6
-MEAL_PERCENT = {"breakfast": 15, "lunch": 25, "dinner": 25}  # rule 8
-HOTEL_BREAKFAST_PERCENT = 15  # rule 7
+MEAL_PERCENT = {"breakfast": 15, "lunch": 25, "dinner": 25}  # rule 10
+HOTEL_BREAKFAST_PERCENT = 15  # rule 8
 DAY_MINUTES = 1440
 
 
@@ -93,7 +93,7 @@ def dsa_breakdown(rate, scenario):
         gross = half_up(daily * minutes, DAY_MINUTES)
         meal_base = daily
     else:
-        gross = daily * BAND_PERCENT[band] // 100
+        gross = daily * BAND_PERCENT[band] // 100  # exact: every bundled rate is whole euros (a test asserts it)
         meal_base = gross  # a partial allowance is reduced from the amount received
     meals = sum(half_up(meal_base * MEAL_PERCENT[meal], 100) for meal in scenario["meals_provided"])
     breakfasts = sum(
@@ -110,17 +110,17 @@ def dsa_breakdown(rate, scenario):
 
 
 def night_ceiling(rate, night):
-    """Rule 7: the hotel ceiling, raised by 15 % of the daily allowance when breakfast is in the room price."""
+    """Rule 8: the hotel ceiling, raised by 15 % of the daily allowance when breakfast is in the room price."""
     raised = half_up(rate["daily_allowance_cents"] * HOTEL_BREAKFAST_PERCENT, 100) if night["breakfast_included"] else 0
     return rate["hotel_ceiling_cents"] + raised
 
 
 def night_reimbursed(rate, night):
-    """C6: the charged price when within the ceiling or over it solely because of local tax; else the ceiling."""
+    """C6: the whole charge (room plus local tax) when the room rate is within the ceiling, which covers a
+    charge within it and an excess caused solely by local tax; else exactly the ceiling."""
     ceiling = night_ceiling(rate, night)
-    charged = night["room_rate_cents"] + night["local_tax_cents"]
-    if charged <= ceiling or night["room_rate_cents"] <= ceiling:
-        return charged
+    if night["room_rate_cents"] <= ceiling:
+        return night["room_rate_cents"] + night["local_tax_cents"]
     return ceiling
 
 

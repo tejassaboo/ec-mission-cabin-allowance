@@ -165,6 +165,8 @@ def schema_problems(world, scenario):
     for night in scenario["hotel_nights"]:
         if tuple(night) != NIGHT_KEYS:
             problems.append(f"hotel night keys {list(night)}")
-        else:
-            day_number(night["night_of"])
+            continue
+        day_number(night["night_of"])
+        if night["room_rate_cents"] < 0 or night["local_tax_cents"] < 0:
+            problems.append(f"hotel night {night['night_of']}: a room rate or local tax is negative")
     return problems

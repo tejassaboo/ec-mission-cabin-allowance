@@ -3,16 +3,19 @@
 The verifier computes the correct claim itself (rules.oracle over the bundled fixtures) and checks the
 submitted one against it in stages, each a list of constraints with stable ids (the reason codes):
 
-0. answer key: the pinned reference equals the verifier's own oracle (else the plugin is broken);
-1. referential integrity: each qualifying segment id names a segment of that direction;
-2. internal consistency: each direction's class agrees with its mode and qualifying segment, the band
+1. answer key: the pinned reference equals the verifier's own oracle (else the plugin is broken);
+2. referential integrity: each qualifying segment id names a segment of that direction;
+3. internal consistency: each direction's class agrees with its mode and qualifying segment, the band
    agrees with the submitted minutes, amounts are not negative, and the total is the sum;
-3. policy decision against the oracle: rate country, each direction's qualifying segment and class,
+4. policy decision against the oracle: rate country, each direction's qualifying segment and class,
    mission minutes, band, allowance, hotel.
 
-A stage is checked only when every earlier stage holds. The message names the first failing constraint
-and how many more fail. Shape problems (types, Enum values, missing or extra fields) never get here:
-NanoAgent's build_output refuses them first. The score is 1.0 when every constraint holds, else 0.0.
+A stage is checked only when every earlier stage holds, and every constraint of a stage is checked.
+The message names the first failing constraint and how many more fail. Stage 3 pins the band to the
+submitted minutes, so dsa-band-correct can only fail alongside mission-minutes-correct, which comes
+first: it is never the headline, but it names the band's own mistake in the constraint list. Shape
+problems (types, Enum values, missing or extra fields) never get here: NanoAgent's build_output refuses
+them first. The score is 1.0 when every constraint holds, else 0.0.
 """
 
 from .checks import UNEXPECTED, fixtures, plain, result
@@ -105,7 +108,7 @@ def judge(world, scenario, key, pinned, given):
             ("return-qualifying-correct", lambda: qualifying_problem(scenario, key, given, "return")),
             ("return-class-correct", lambda: class_problem(scenario, key, given, "return")),
             ("mission-minutes-correct", lambda: minutes_problem(scenario, key, given)),
-            ("dsa-band-correct", lambda: band_problem(key, given)),
+            ("dsa-band-correct", lambda: band_problem(key, given)),  # implied by the two checks above
             ("dsa-correct", lambda: dsa_problem(rate, scenario, key, given)),
             ("hotel-correct", lambda: hotel_problem(rate, scenario, key, given)),
         ],
@@ -228,15 +231,13 @@ def flights(trip):
 
 
 def qualifying_problem(scenario, key, given, side):
+    """Stage 3 already pinned a rail direction to null and a named segment to >= 300 min, so a difference
+    here is an air direction with a long segment that the submission did not name (or named a later one)."""
     name = f"{side}_qualifying_segment_id"
     if given[name] == key[name]:
         return None
     trip = journey(scenario, side)
-    if trip["mode"] == "rail":
-        return key[name], given[name], f"the {side} journey is by rail and has no qualifying segment"
     long = qualifying_segment(trip)
-    if long is None:
-        return key[name], given[name], f"no {side} segment flies >= {THRESHOLD_MINUTES} min ({flights(trip)})"
     return key[name], given[name], (
         f"{long['segment_id']} is the first {side} segment with >= {THRESHOLD_MINUTES} min ({flights(trip)}); "
         f"one such segment qualifies the whole {side} journey"
@@ -244,14 +245,12 @@ def qualifying_problem(scenario, key, given, side):
 
 
 def class_problem(scenario, key, given, side):
+    """Stage 3 already pinned rail to rail_first_class and a direction with no long segment to economy, so a
+    difference here is a qualifying air direction booked in the wrong one of its sold cabins (C2)."""
     name = f"{side}_class"
     if given[name] == key[name]:
         return None
     trip = journey(scenario, side)
-    if trip["mode"] == "rail":
-        return key[name], given[name], f"the {side} journey is by rail: rail_first_class"
-    if qualifying_segment(trip) is None:
-        return key[name], given[name], f"no {side} segment flies >= {THRESHOLD_MINUTES} min ({flights(trip)}), so economy"
     gap = commitment_gap(trip)
     meeting = "no commitment after arrival" if gap is None else f"the first commitment is {gap} min after arrival (window 0 to {MEETING_WINDOW})"
     overnight = "an overnight" if overnight_long_flight(trip) else "no overnight"
