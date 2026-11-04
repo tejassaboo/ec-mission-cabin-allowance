@@ -1,5 +1,7 @@
 # EC Mission Cabin Allowance
 
+**No affiliation with the European Commission.**
+
 A `nanoagent.plugin/v0001` plugin. An agent prepares one mission claim for a Brussels-based European
 Commission staff member under a toy handbook paraphrased from the Commission's 2025 Guide to Missions
 and Authorised Travel, C(2025) 2495 of 13 May 2025. It reads the mission, looks up the destination's
